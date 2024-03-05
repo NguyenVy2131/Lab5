@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
-
+import javax.swing.border.Border;
 
 /**
  *
@@ -20,64 +20,47 @@ public class ResortForm extends JFrame {
     private JTextField nameField;
     private JCheckBox breakfast, goft, pool;
     private JComboBox percent;
-    private JLabel title, note1, note2;
+    private JLabel title, note1, note2, tf;
     private JButton Calculate;
 
     public ResortForm() {
         setTitle("This is my First Frame");
-        setSize(500, 500);
+        setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        JPanel input = new JPanel(new GridLayout(7, 1, 5, 5));
+        JPanel input = new JPanel(new GridLayout(7, 1));
 
-        JPanel inputPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+        JPanel inputPanel = new JPanel(new GridLayout(2, 1));
 
         JPanel name = new JPanel(new GridLayout(1, 2, 5, 5));
         JPanel checkbox = new JPanel(new GridLayout(1, 3, 5, 5));
         JPanel last = new JPanel(new GridLayout(1, 2, 5, 5));
 
         Calculate = new JButton("Calculate");
-        final JLabel tf = new JLabel("");
-        Calculate.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                double total = 200;
-                if(breakfast.isSelected()){
-                    total+=20;
-                }
-                if(goft.isSelected()){
-                    total+=50;
-                }
-                if(pool.isSelected()){
-                    total+=15;
-                }
-                if(percent.getItemAt(percent.getSelectedIndex()).equals("Weekend (+30%)")){
-                    total = total*130/100;
-                }
-                if(percent.getItemAt(percent.getSelectedIndex()).equals("Week day (-10%)")){
-                    total = total*90/100;
-                }
-                
-                tf.setText("Hello "+nameField.getText()+" Your payment is: "+"$"+total);
-            }
+        tf = new JLabel("");
+        Font font3 = new Font("Arial", Font.BOLD, 20);
+        tf.setFont(font3);
+        Calculate.addActionListener((e) -> {
+            Calculate();
         });
         String obj[] = {"Weekend (+30%)", "Week day (-10%)"};
         percent = new JComboBox(obj);
-        JLabel title = new JLabel("Resort Price Calculator");
-        title.setHorizontalAlignment((int) CENTER_ALIGNMENT);
-        JLabel note1 = new JLabel("Base price for a room is $200");
-        note1.setHorizontalAlignment((int) CENTER_ALIGNMENT);
-        note1.setSize(5, 5);
-        JLabel note2 = new JLabel("Choose option that you want");
-        note2.setHorizontalAlignment((int) CENTER_ALIGNMENT);
-        note2.setSize(5, 5);
+        JLabel title = new JLabel("Resort Price Calculator", (int) CENTER_ALIGNMENT);
+        Font font = new Font("Arial", Font.BOLD, 27);
+        title.setFont(font);
+        JLabel note1 = new JLabel("Base price for a room is $200", (int) CENTER_ALIGNMENT);
+        Font font1 = new Font("Arial", Font.BOLD, 18);
+        note1.setFont(font1);
+        JLabel note2 = new JLabel("Choose option that you want", (int) CENTER_ALIGNMENT);
+        note2.setFont(font1);
         nameField = new JTextField();
         breakfast = new JCheckBox("Breakfast $20");
         goft = new JCheckBox("Goft $50");
         pool = new JCheckBox("Pool $15");
 
-        name.add(new JLabel("Guest name "));
+        name.add(new JLabel("Guest name:"));
         name.add(nameField);
 
         checkbox.add(breakfast);
@@ -102,6 +85,36 @@ public class ResortForm extends JFrame {
         add(mainPanel);
         setVisible(true);
 
+    }
+    public void Calculate() {
+                String name = nameField.getText();
+                if (nameField.getText().isEmpty()) {
+                    setColorBorder(nameField, Color.RED);
+                    JOptionPane.showMessageDialog(this, "Please enter your name");
+                    nameField.requestFocus();
+                }
+                double total = 200;
+                if (breakfast.isSelected()) {
+                    total += 20;
+                }
+                if (goft.isSelected()) {
+                    total += 50;
+                }
+                if (pool.isSelected()) {
+                    total += 15;
+                }
+                if (percent.getItemAt(percent.getSelectedIndex()).equals("Weekend (+30%)")) {
+                    total = total * 130 / 100;
+                }
+                if (percent.getItemAt(percent.getSelectedIndex()).equals("Week day (-10%)")) {
+                    total = total * 90 / 100;
+                }
+
+                tf.setText("Hello " + name + " Your payment is: " + "$" + total);
+            }
+    public void setColorBorder(JTextField textField, Color color) {
+        Border newBorder = BorderFactory.createLineBorder(color);
+        textField.setBorder(newBorder);
     }
 
 }
